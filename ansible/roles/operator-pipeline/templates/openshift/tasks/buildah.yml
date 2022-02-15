@@ -54,7 +54,7 @@ spec:
       script: |
         buildah --storage-driver=$(params.STORAGE_DRIVER) bud \
           $(params.BUILD_EXTRA_ARGS) --format=$(params.FORMAT) \
-          --tls-verify=$(params.TLSVERIFY) --no-cache \
+          --tls-verify=false --no-cache \
           -f $(params.DOCKERFILE) -t $(params.IMAGE) $(params.CONTEXT)
       volumeMounts:
         - mountPath: /var/lib/containers
