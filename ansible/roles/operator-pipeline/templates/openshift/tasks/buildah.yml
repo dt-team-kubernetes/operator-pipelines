@@ -71,7 +71,7 @@ spec:
         fi
 
         buildah --storage-driver=$(params.STORAGE_DRIVER) push \
-          $(params.PUSH_EXTRA_ARGS) $EXTRA_ARGS --tls-verify=$(params.TLSVERIFY) \
+          $(params.PUSH_EXTRA_ARGS) $EXTRA_ARGS --tls-verify=false \
           --digestfile $(workspaces.source.path)/image-digest $(params.IMAGE) \
           docker://$(params.IMAGE)
       volumeMounts:
