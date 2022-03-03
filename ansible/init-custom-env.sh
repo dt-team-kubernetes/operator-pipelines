@@ -21,6 +21,9 @@ initialize_environment() {
     if [ ! -f $SECRET ]; then
         touch $SECRET
         echo "File $SECRET was not found, empty one was created"
+    else
+        echo '' > $SECRET
+        echo "New empty $SECRET was created"
     fi
 
     ansible-playbook -i inventory/operator-pipeline playbooks/deploy.yml \
@@ -47,36 +50,17 @@ update_token() {
 # Install all the other resources (pipelines, tasks, secrets etc..)
 execute_playbook() {
   ansible-playbook -i inventory/operator-pipeline playbooks/deploy.yml \
-    --vault-password-file vault-password \
+    --vault-password-file=$PASSWD_FILE \
     -e "oc_namespace=$NAMESPACE" \
     -e "env=$ENV" \
+    -e "ocp_host=`oc whoami --show-server`" \
     -e "custom=true"
-}
-
-pull_parent_index() {
-  oc project $NAMESPACE
-  # Must be run once before certifying against the certified catalog.
-  oc --request-timeout 10m import-image certified-operator-index \
-    --from=registry.redhat.io/redhat/certified-operator-index \
-    --reference-policy local \
-    --scheduled \
-    --confirm \
-    --all
-
-  # Must be run once before certifying against the Red Hat Martketplace catalog.
-  oc --request-timeout 10m import-image redhat-marketplace-index \
-    --from=registry.redhat.io/redhat/redhat-marketplace-index \
-    --reference-policy local \
-    --scheduled \
-    --confirm \
-    --all
 }
 
 main() {
   initialize_environment
   update_token
   execute_playbook
-  pull_parent_index
 }
 
 main
