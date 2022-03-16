@@ -1,3 +1,4 @@
+---
 env: prod
 ocp_host: https://api.pipelines-prod.ijdb.p1.openshiftapps.com:6443
 branch: main
@@ -21,8 +22,14 @@ operator_pipeline_preflight_decryption_key_public_local_path: ../../vaults/prod/
 github_ssh_credentials_path: ../../vaults/prod/github-bot-ssh
 e2e_kubeconfig_path: ../../vaults/prod/kubeconfig-e2e
 
+pipelines_metrics_endpoint: http://pipeline-metrics.pipeline-metrics-prod
+
 operator_pipeline_ibm_webhook_token_local_path: ../../vaults/prod/nonprod-ibm-webhook-token
 
 # Settings for importing index imagestreams
 certified_operator_index: registry.redhat.io/redhat/certified-operator-index
 redhat_marketplace_index: registry.redhat.io/redhat/redhat-marketplace-index
+
+community_signing_umb_client_name: community-operator-signing-pipeline
+community_signing_pipeline_url: "{{ community_signing_pipeline_name }}-tekton-{{ env }}.apps.pipelines-prod.ijdb.p1.openshiftapps.com"
+nginx_proxy_url: "{{ community_signing_pipeline_name }}-{{ env }}.apps.pipelines-prod.ijdb.p1.openshiftapps.com"
